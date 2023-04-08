@@ -1,0 +1,128 @@
+<?php
+$token = "5725027558:AAFh4yzqxXjAnSTHwIEIeG8nG6S0N4JTQAo";
+define('API_KEY',$token);
+function bot($method,$datas=[]){
+    $yhya = http_build_query($datas);
+        $url = "https://api.telegram.org/bot".API_KEY."/".$method."?$yhya";
+        $yhya_Sy = file_get_contents($url);
+        return json_decode($yhya_Sy);
+}
+$members = explode("\n",file_get_contents("yhya/members.txt"));
+$text = $_GET['Text'];
+$id = $_GET['Id'];
+$type = $_GET['Type'];
+$caption = $_GET['Caption'];
+$a = $_GET['yhya'];
+echo $a;
+if($type == "text"){
+foreach($members as $yhyam){
+bot('sendmessage', [
+'chat_id'=>$yhyam,
+'text'=>"$text",
+'parse_mode'=>"MARKDOWN",
+'parse_mode'=>"HTML",
+]);
+}
+}
+if($type == "photo"){
+foreach($members as $yhyam){
+bot('sendphoto', [
+'chat_id'=>$yhyam,
+'photo'=>$id,
+'caption'=>$caption,
+'parse_mode'=>"MARKDOWN",
+'parse_mode'=>"HTML",
+]);
+}
+}
+if($type == "video"){
+foreach($members as $yhyam){
+bot('Sendvideo',[
+'chat_id'=>$yhyam,
+'video'=>$id,
+'caption'=>$caption,
+'parse_mode'=>"MARKDOWN",
+'parse_mode'=>"HTML",
+]);
+}
+}
+if($type == "sticker"){
+foreach($members as $yhyam){
+bot('Sendsticker',[
+'chat_id'=>$yhyam,
+'sticker'=>$id,
+'parse_mode'=>"MARKDOWN",
+'parse_mode'=>"HTML",
+]);
+}
+}
+if($type == "file"){
+foreach($members as $yhyam){
+ bot('SendDocument',[
+'chat_id'=>$yhyam,
+'document'=>$id,
+'caption'=>$caption,
+'parse_mode'=>"MARKDOWN",
+'parse_mode'=>"HTML",
+'disable_web_page_preview'=>true,
+]);
+}
+}
+if($type == "music"){
+foreach($members as $yhyam){
+ bot('Sendaudio',[
+'chat_id'=>$yhyam,
+'audio'=>$id,
+'caption'=>$caption,
+'parse_mode'=>"MARKDOWN",
+'parse_mode'=>"HTML",
+'disable_web_page_preview'=>true,
+]);
+}
+}
+if($type == "voice"){
+foreach($members as $yhyam){
+ bot('Sendvoice',[
+'chat_id'=>$yhyam,
+'voice'=>$id,
+'caption'=>$caption,
+'parse_mode'=>"MARKDOWN",
+'parse_mode'=>"HTML",
+'disable_web_page_preview'=>true,
+]);
+}
+}
+if($type == "Markdown"){
+foreach($members as $yhyam){
+bot('sendMessage', [
+'chat_id'=>$yhyam,
+'text'=>"$text",
+'parse_mode'=>"MARKDOWN",
+'disable_web_page_preview'=>true,
+]);
+}
+}
+if($type == "HTML"){
+foreach($members as $yhyam){
+bot('sendMessage', [
+'chat_id'=>$yhyam,
+'text'=>"$text",
+'parse_mode'=>"HTML",
+'disable_web_page_preview'=>true,
+]);
+}
+}
+if($type == "all"){
+	$coin = json_decode(file_get_contents('yhya/coin.json'),true);
+	foreach($members as $yhyam){
+		$ab = "لقد ربحت $id نقاط من الادارة اصبح عدد نقاطك  ".$coin[$yhyam]." نقطة 💰";
+bot('sendMessage', [
+'chat_id'=>$yhyam,
+'text'=>"$ab",
+'parse_mode'=>"HTML",
+'disable_web_page_preview'=>true,
+]);
+$coin[$yhyam] += $id;
+file_put_contents('yhya/coin.json', json_encode($coin));
+}
+	}
